@@ -1,0 +1,162 @@
+import SwiftUI
+struct DirectionsView: View {
+    var body: some View {
+        ZStack {
+            Color(red: 0.99, green: 0.97, blue: 0.97)
+                .ignoresSafeArea()
+            VStack(spacing: 18) {
+                // Header
+                HStack {
+                    Button {
+                    } label: {
+                        
+                    }
+                    Spacer()
+                    Text("Accessible Directions")
+                        .font(.system(size: 24, weight: .bold))
+                    Spacer()
+                    Image(systemName: "figure.roll")
+                        .font(.system(size: 24))
+                        .foregroundColor(
+                            Color(red: 0.21, green: 0.09, blue: 0.59)
+                        )
+                }
+                .padding(.horizontal,22)
+                .padding(.top,20)
+                // Route Header Card
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Science & Engineering Building")
+                        .font(.system(size:18, weight:.bold))
+                    HStack {
+                        Image(systemName:"arrow.down")
+                        Text("to")
+                        Image(systemName:"building.2.fill")
+                        Text("University Hall")
+                    }
+                    .foregroundColor(.gray)
+                    HStack {
+                        Image(systemName:"clock")
+                        Text("Estimated time: 8 minutes")
+                    }
+                    .font(.system(size:15))
+                    .foregroundColor(
+                        Color(red:0.21,green:0.09,blue:0.59)
+                    )
+                }
+                .padding()
+                .frame(maxWidth:.infinity, alignment:.leading)
+                .background(Color.white)
+                .cornerRadius(22)
+                .shadow(
+                    color:.black.opacity(0.12),
+                    radius:6,
+                    y:3
+                )
+                .padding(.horizontal,22)
+                // Directions List
+                ScrollView {
+                    VStack(spacing:18) {
+                        DirectionCard(
+                            number:"1",
+                            icon:"door.left.hand.open",
+                            title:"Exit Science & Engineering Building",
+                            description:
+                            "Leave through the main east entrance. Use the automatic door button located beside the entrance for easier access."
+                        )
+                        DirectionCard(
+                            number:"2",
+                            icon:"figure.walk",
+                            title:"Follow the accessible pathway",
+                            description:
+                            "Continue straight along the sidewalk. Stay on the left side where the pathway has a smoother surface and avoid the stair entrance."
+                        )
+                        DirectionCard(
+                            number:"3",
+                            icon:"arrow.up.and.down",
+                            title:"Use the elevator entrance",
+                            description:
+                            "Enter University Hall through the accessible entrance. The elevator is located near the main lobby on the right side. Take the elevator to the correct floor."
+                        )
+                        DirectionCard(
+                            number:"4",
+                            icon:"figure.roll",
+                            title:"Ramp access available",
+                            description:
+                            "A ramp is available near the west entrance of University Hall. Use the ramp instead of the stairs for a step-free route."
+                        )
+                        DirectionCard(
+                            number:"5",
+                            icon:"toilet.fill",
+                            title:"Accessible restroom",
+                            description:
+                            "An accessible restroom is located near the main hallway after exiting the elevator. Look for the wheelchair accessibility sign."
+                        )
+                        // Arrival Card
+                        VStack(alignment:.leading,spacing:10){
+                            HStack {
+                                Image(systemName:"checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("You have arrived")
+                                    .font(.system(size:18,weight:.bold))
+                            }
+                            Text("University Hall entrance reached. Your classroom is nearby.")
+                                .foregroundColor(.gray)
+                        }
+                        .padding()
+                        .frame(maxWidth:.infinity,alignment:.leading)
+                        .background(Color.white)
+                        .cornerRadius(22)
+                    }
+                    .padding(.horizontal,22)
+                }
+                
+            }
+        }
+    }
+}
+struct DirectionCard: View {
+    let number:String
+    let icon:String
+    let title:String
+    let description:String
+    var body: some View {
+        HStack(alignment:.top,spacing:15){
+            // Step number
+            Text(number)
+                .font(.system(size:18,weight:.bold))
+                .foregroundColor(.white)
+                .frame(width:35,height:35)
+                .background(
+                    Color(red:0.21,green:0.09,blue:0.59)
+                )
+                .clipShape(Circle())
+            VStack(alignment:.leading,spacing:8){
+                HStack {
+                    Image(systemName:icon)
+                        .foregroundColor(
+            Color(red:0.21,green:0.09,blue:0.59)
+                        )
+                    Text(title)
+                        .font(.system(size:17,weight:.bold))
+                }
+                Text(description)
+                    .font(.system(size:15))
+                    .foregroundColor(.gray)
+                    .fixedSize(horizontal:false, vertical:true)
+            }
+            Spacer()
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(22)
+        .shadow(
+            color:.black.opacity(0.12),
+            radius:6,
+            y:3
+        )
+    }
+}
+#Preview {
+    DirectionsView()
+}
+
