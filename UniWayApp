@@ -1,0 +1,20 @@
+//
+//  UniWayApp.swift
+//  UniWay
+//
+//  Created by NEIU Pathways on 7/14/26.
+//
+
+import SwiftUI
+
+@main
+struct UniWayApp: App {
+    var body: some Scene {
+        WindowGroup {
+            
+                UniWayWelcomeback()
+            
+            }
+        }
+    }
+
