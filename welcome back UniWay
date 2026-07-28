@@ -1,0 +1,138 @@
+
+//  UniWay
+//
+//  Created by NEIU Pathways on 7/20/26.
+//
+
+import SwiftUI
+
+struct UniWayWelcomeback: View {
+
+    // Stores the user's email and password
+    @State private var email = ""
+    @State private var password = ""
+
+    // Controls navigation
+    @State private var goToHome = false
+    @State private var goToCreateAccount = false
+
+    var body: some View {
+
+        NavigationStack {
+
+            VStack(spacing: 20) {
+
+                // App Logo
+                Image("uniway2")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 350, height: 180)
+                    .padding(.top, 20)
+
+                // Welcome Title
+                Text("Welcome to UniWay")
+                    .font(.custom("Inter", size: 32).weight(.bold))
+                    .foregroundColor(Color(red: 0.11, green: 0.18, blue: 0.30))
+
+                // Subtitle
+                Text("Login below or create an account")
+                    .font(.custom("Inter", size: 16))
+                    .foregroundColor(Color(red: 0.33, green: 0.26, blue: 0.59))
+
+                // Email
+                VStack(alignment: .leading, spacing: 6) {
+
+                    Text("Email")
+                        .font(.custom("Inter", size: 16))
+                        .foregroundColor(Color(red: 0.33, green: 0.26, blue: 0.59))
+
+                    TextField("Enter your email", text: $email)
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.emailAddress)
+                        .padding()
+                        .frame(width: 323, height: 43)
+                        .background(Color.white)
+                        .cornerRadius(13)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 13)
+                                .stroke(Color(red: 0.74, green: 0.58, blue: 0.94), lineWidth: 0.5)
+                        )
+                        .shadow(color: .black.opacity(0.25), radius: 4, y: 4)
+                }
+
+                // Password
+                VStack(alignment: .leading, spacing: 6) {
+
+                    Text("Password")
+                        .font(.custom("Inter", size: 16))
+                        .foregroundColor(Color(red: 0.33, green: 0.26, blue: 0.59))
+
+                    SecureField("Enter password", text: $password)
+                        .padding()
+                        .frame(width: 323, height: 43)
+                        .background(Color.white)
+                        .cornerRadius(13)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 13)
+                                .stroke(Color(red: 0.74, green: 0.58, blue: 0.94), lineWidth: 0.5)
+                        )
+                        .shadow(color: .black.opacity(0.25), radius: 4, y: 4)
+                }
+
+                // Sign In Button
+                Button {
+
+                    // Navigate to UniWayhelpsyou
+                    goToHome = true
+
+                } label: {
+
+                    Text("Sign In")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(width: 327, height: 48)
+                        .background(Color(red: 0.74, green: 0.15, blue: 0.20))
+                        .cornerRadius(14)
+                }
+
+                // Hidden NavigationLink for Sign In
+                NavigationLink(
+                    destination: UniWayhelpsyou(login: Binding<Bool>.init(get: { false }, set: { _ in })),
+                    isActive: $goToHome
+                ) {
+                    EmptyView()
+                }
+
+                // Create Account Button
+                Button {
+
+                    // Navigate to the Create Account screen
+                    goToCreateAccount = true
+
+                } label: {
+
+                    Text("Don't have an account? Create one")
+                        .font(.custom("Inter", size: 16).weight(.semibold))
+                        .underline()
+                        .foregroundColor(Color(red: 0.23, green: 0.14, blue: 0.42))
+                }
+
+                // Hidden NavigationLink for Create Account
+                NavigationLink(
+                    destination: Swiftuniway2(),
+                    isActive: $goToCreateAccount
+                ) {
+                    EmptyView()
+                }
+
+                Spacer()
+            }
+            .padding()
+            .navigationBarBackButtonHidden(true)
+        }
+    }
+}
+
+#Preview {
+    UniWayWelcomeback()
+}
