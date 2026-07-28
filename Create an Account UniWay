@@ -1,0 +1,183 @@
+// part 2
+import SwiftUI
+
+struct Swiftuniway2: View {
+    
+    @State private var username = ""
+    @State private var birthDate = ""
+    @State private var email = ""
+    @State private var password = ""
+    
+    @State private var createdAccount = ""
+    @State private var showAccount = false
+    
+    @State private var goToHome = false
+    @State private var goToCreateAccount = false
+    var body: some View {
+        NavigationStack { // code for moving
+            ScrollView {
+                
+                VStack(spacing: 20) {
+                    
+                    Image("uniway1")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 350, height: 180)
+                        .padding(.top, 20)
+                    
+                    Text("Create an Account")
+                        .font(.custom("Konkhmer Sleokchher", size: 24))
+                        .foregroundColor(.black)
+                    
+                    Text("Enter your account details below or log in")
+                        .font(.custom("Inter", size: 16))
+                        .foregroundColor(Color(red: 0.33, green: 0.26, blue: 0.59))
+                    
+                    // Username
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Username")
+                            .font(.custom("Inter", size: 16))
+                            .foregroundColor(Color(red: 0.33, green: 0.26, blue: 0.59))
+                        
+                        TextField("Enter username", text: $username)
+                            .padding()
+                            .frame(width: 323, height: 43)
+                            .background(Color.white)
+                            .cornerRadius(13)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 13)
+                                    .stroke(Color(red: 0.74, green: 0.58, blue: 0.94), lineWidth: 0.5)
+                            )
+                            .shadow(color: .black.opacity(0.25), radius: 4, y: 4)
+                    }
+                    
+                    // Birth Date
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Date of Birth")
+                            .font(.custom("Inter", size: 16))
+                            .foregroundColor(Color(red: 0.33, green: 0.26, blue: 0.59))
+                        
+                        TextField("MM / DD / YYYY", text: $birthDate)
+                            .padding()
+                            .frame(width: 323, height: 43)
+                            .background(Color.white)
+                            .cornerRadius(13)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 13)
+                                    .stroke(Color(red: 0.74, green: 0.58, blue: 0.94), lineWidth: 0.5)
+                            )
+                            .shadow(color: .black.opacity(0.25), radius: 4, y: 4)
+                    }
+                    
+                    // Email
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Email")
+                            .font(.custom("Inter", size: 16))
+                            .foregroundColor(Color(red: 0.33, green: 0.26, blue: 0.59))
+                        
+                        TextField("Enter your email", text: $email)
+                            .textInputAutocapitalization(.never)
+                            .keyboardType(.emailAddress)
+                            .padding()
+                            .frame(width: 323, height: 43)
+                            .background(Color.white)
+                            .cornerRadius(13)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 13)
+                                    .stroke(Color(red: 0.74, green: 0.58, blue: 0.94), lineWidth: 0.5)
+                            )
+                            .shadow(color: .black.opacity(0.25), radius: 4, y: 4)
+                    }
+                    
+                    // Password
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Password")
+                            .font(.custom("Inter", size: 16))
+                            .foregroundColor(Color(red: 0.33, green: 0.26, blue: 0.59))
+                        
+                        SecureField("Enter password", text: $password)
+                            .padding()
+                            .frame(width: 323, height: 43)
+                            .background(Color.white)
+                            .cornerRadius(13)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 13)
+                                    .stroke(Color(red: 0.74, green: 0.58, blue: 0.94), lineWidth: 0.5)
+                            )
+                            .shadow(color: .black.opacity(0.25), radius: 4, y: 4)
+                    }
+                    
+                    // Create Account Button
+                    // Sign In Button
+                    Button {
+                        print("Sign In tapped")
+                        
+                        // Navigate to ContentView
+                        goToHome = true
+                        
+                    } label: {
+                        
+                    }
+                    
+                    
+                    // Create Account Button
+                    Button {
+                        
+                        print("Create Account tapped")
+                        goToHome = true
+                        
+                        createdAccount = """
+                        Username: \(username)
+                        Date of Birth: \(birthDate)
+                        Email: \(email)
+                        Password: \(password)
+                        """
+                        
+                        showAccount = true
+                        
+                    } label: {
+                        
+                        Text("Create Account")
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .frame(width: 327, height: 48)
+                            .background(Color(red: 0.74, green: 0.15, blue: 0.20))
+                            .cornerRadius(14)
+                        
+                        NavigationLink(
+                            destination: UniWayWelcomeback(),
+                            isActive: $goToHome
+                        ) {
+                            EmptyView()
+                        }
+                        // Show Created Account
+                        if showAccount {
+                            VStack(alignment: .leading, spacing: 10) {
+                                
+                                
+                                
+                                
+                                
+                                // Sign In
+                                Button {
+                                    print("Sign In tapped")
+                                } label: {
+                                    Text("Already have an account? Sign In")
+                                        .font(.custom("Inter", size: 16).weight(.semibold))
+                                        .underline()
+                                        .foregroundColor(Color(red: 0.23, green: 0.14, blue: 0.42))
+                                }
+                            }
+                            .navigationBarBackButtonHidden()
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+}
+    #Preview {
+        Swiftuniway2()
+    }
+
