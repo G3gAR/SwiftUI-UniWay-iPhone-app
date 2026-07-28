@@ -1,0 +1,128 @@
+//
+//  UniWaytab_bar.swift
+//  UniWay
+//
+//  Created by NEIU Pathways on 7/22/26.
+//
+
+import SwiftUI
+
+struct MainTabView: View {
+
+    @State var selectedTab = 0
+    @State var login: Bool = true
+    var body: some View {
+        if login {
+            TabView(selection: $selectedTab) {
+                
+                // Map tab
+                Uniwaymap2()
+                    .tabItem {
+                        Image(systemName: "map.fill")
+                        Text("Map")
+                    }
+                    .tag(0)
+                
+                // Schedule tab
+                MySchedule()
+                    .tabItem {
+                        Image(systemName: "calendar")
+                        Text("Schedule")
+                    }
+                    .tag(1)
+                
+                // Alerts tab
+                Live_Alerts()
+                    .tabItem {
+                        Image(systemName: "bell.fill")
+                        Text("Alerts")
+                    }
+                    .tag(2)
+                
+                // Saved tab
+                UniWayinputschedule()
+                    .tabItem {
+                        Image(systemName: "bookmark.fill")
+                        Text("Saved")
+                    }
+                    .tag(3)
+                
+                // Profile tab
+                ProfilePage()
+                    .tabItem {
+                        Image(systemName: "person.fill")
+                        Text("Profile")
+                    }
+                    .tag(4)
+            }
+            .tint(
+                Color(
+                    red: 0.14,
+                    green: 0.08,
+                    blue: 0.40
+                )
+            )
+        } else {
+           UniWayWelcomeback()
+        }
+    }
+}
+
+
+// Temporary Map screen
+struct MapPage: View {
+
+    var body: some View {
+
+        VStack {
+
+            Image(systemName: "map.fill")
+                .font(.system(size: 50))
+
+            Text("Map")
+                .font(.title)
+                .bold()
+        }
+    }
+}
+
+
+// Temporary Saved screen
+struct SavedPage: View {
+
+    var body: some View {
+
+        VStack {
+
+            Image(systemName: "bookmark.fill")
+                .font(.system(size: 50))
+
+            Text("Saved")
+                .font(.title)
+                .bold()
+        }
+    }
+}
+
+
+// Temporary Profile screen
+struct ProfilePage: View {
+
+    var body: some View {
+
+        VStack {
+
+            Image(systemName: "person.fill")
+                .font(.system(size: 50))
+
+            Text("Profile")
+                .font(.title)
+                .bold()
+        }
+    }
+}
+
+
+#Preview {
+    MainTabView()
+}
