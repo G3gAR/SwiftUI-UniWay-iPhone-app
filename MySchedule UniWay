@@ -1,0 +1,211 @@
+import SwiftUI
+struct MySchedule: View {
+    @State private var selectedDay = 0
+    @State private var selectedTab = "Schedule"
+    let days = [
+        ("Mon", "13"),
+        ("Tue", "14"),
+        ("Wed", "15"),
+        ("Thu", "16"),
+        ("Fri", "17")
+    ]
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color(red: 0.99, green: 0.97, blue: 0.97)
+                    .ignoresSafeArea()
+                VStack(spacing: 18) {
+                    // Header
+                    HStack {
+                        Button {
+                            
+                        }
+                        label: {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 24, weight: .medium))
+                                .foregroundColor(.black)
+                        }
+                        Spacer()
+                        Text("My Schedule")
+                            .font(.system(size: 28, weight: .bold))
+                        Spacer()
+                        Button {
+                            
+                        }
+                        label: {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 24))
+                                .foregroundColor(.black)
+                        }
+                    }
+                    .padding(.horizontal, 22)
+                    .padding(.top, 20)
+                    // Date selector
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 14) {
+                            ForEach(days.indices, id: \.self) { index in
+                                Button {
+                                    selectedDay = index
+                                }
+                                label: {
+                                    VStack(spacing: 3) {
+                                        Text(days[index].0)
+                                            .font(.system(size: 16, weight: .semibold))
+                                        Text(days[index].1)
+                                            .font(.system(size: 16, weight: .semibold))
+                                    }
+                                    .foregroundColor(
+                                        selectedDay == index ? .white : .black
+                                    )
+                                    .frame(width: 62, height: 62)
+                                    .background(
+                                        selectedDay == index
+                                        ?
+                                        Color(red: 0.21, green: 0.09, blue: 0.59)
+                                        :
+                                            Color.white
+                                    )
+                                    .clipShape(Circle())
+                                    .shadow(
+                                        color: .black.opacity(0.12),
+                                        radius: 5,
+                                        y: 3
+                                    )
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 22)
+                        .padding(.vertical, 5)
+                    }
+                    // Selected date title
+                    HStack {
+                        Text("Monday, May 12")
+                            .font(.system(size: 21, weight: .bold))
+                        Spacer()
+                    }
+                    .padding(.horizontal, 22)
+                    // Schedule list
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            ScheduleCard(
+                                time: "10:30",
+                                period: "AM",
+                                course: "CS 301",
+                                building: "Univeristy Hall",
+                                room: "Room 123"
+                            )
+                            ScheduleCard(
+                                time: "1:00",
+                                period: "PM",
+                                course: "MATH 220",
+                                building: "SEO Building",
+                                room: "Room 310"
+                            )
+                            ScheduleCard(
+                                time: "3:00",
+                                period: "PM",
+                                course: "ENG 160",
+                                building: "Lecture Center A",
+                                room: "Room 220"
+                            )
+                            Button {
+                            }
+                            label: {
+                                Text("+ Add Class")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 55)
+                                    .background(
+                                        Color(red: 0.74, green: 0.15, blue: 0.20)
+                                    )
+                                    .cornerRadius(18)
+                                    .shadow(
+                                        color: .black.opacity(0.2),
+                                        radius: 5,
+                                        y: 3
+                                    )
+                            }
+                        }
+                        .padding(.horizontal, 22)
+                        .padding(.bottom, 20)
+                    }
+                    
+                    
+                }
+            }
+            
+        }
+    }
+    //  Schedule Card Component
+    struct ScheduleCard: View {
+        let time: String
+        let period: String
+        let course: String
+        let building: String
+        let room: String
+        var body: some View {
+            HStack(alignment: .top, spacing: 15) {
+                // Time section
+                VStack(spacing: 3) {
+                    Text(time)
+                        .font(.system(size: 17, weight: .semibold))
+                    Text(period)
+                        .font(.system(size: 15))
+                        .foregroundColor(.gray)
+                }
+                .frame(width: 55)
+                // Accessibility color divider
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(Color(red: 0.21, green: 0.09, blue: 0.59))
+                    .frame(width: 5)
+                // Class information
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(course)
+                        .font(.system(size: 21, weight: .bold))
+                    Text(building)
+                        .font(.system(size: 15))
+                        .foregroundColor(.black)
+                    Text(room)
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundColor(
+                            Color(red: 0.21, green: 0.09, blue: 0.59)
+                        )
+                    NavigationLink(destination: DirectionsView()) {
+                        HStack(spacing: 7) {
+                            Image(systemName: "location.fill")
+                                .font(.system(size: 15))
+                                .foregroundColor(Color(red: 0.21, green: 0.09, blue: 0.59))
+                            
+                            Text("Get Directions")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(Color(red: 0.21, green: 0.09, blue: 0.59))
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Spacer()
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .frame(height: 155)
+                .background(Color.white)
+                .cornerRadius(25)
+                .shadow(
+                    color: Color.black.opacity(0.15),
+                    radius: 8,
+                    x: 0,
+                    y: 5
+                )
+            }
+        }
+        
+    }
+    
+}
+    
+    #Preview {
+        MySchedule()
+    }
+    
+    
