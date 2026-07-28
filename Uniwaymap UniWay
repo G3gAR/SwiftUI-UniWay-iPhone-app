@@ -1,0 +1,307 @@
+//
+//  Uniwaymap.swift
+//  UniWay
+//
+
+import SwiftUI
+import MapKit
+import CoreLocation
+
+struct Uniwaymap2: View {
+
+    // MARK: - State Variables
+
+    @State private var searchText = ""
+    @State private var searchResults: [MKMapItem] = []
+    @State private var  destination: MKMapItem?
+    @State private var route: MKRoute?
+    @State private var routeSteps: [MKRoute.Step] = []
+
+    @State private var cameraPosition: MapCameraPosition = .region(
+        MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: 41.8708,
+                longitude: -87.6494
+            ),
+            span: MKCoordinateSpan(
+                latitudeDelta: 0.006,
+                longitudeDelta: 0.006
+            )
+        )
+    )
+
+    // MARK: - UIC Locations
+
+    let dorms = CLLocationCoordinate2D(
+        latitude: 41.8708,
+        longitude: -87.6494
+    )
+
+    let studentCenter = CLLocationCoordinate2D(
+        latitude: 41.871953,
+        longitude: -87.650024
+    )
+
+    let behavioralScience = CLLocationCoordinate2D(
+        latitude: 41.874029,
+        longitude: -87.652232
+    )
+
+    let elevator = CLLocationCoordinate2D(
+        latitude: 41.87275,
+        longitude: -87.64800
+    )
+
+    let ramp = CLLocationCoordinate2D(
+        latitude: 41.87190,
+        longitude: -87.65015
+    )
+
+    let entrance = CLLocationCoordinate2D(
+        latitude: 41.87410,
+        longitude: -87.65210
+    )
+
+    var body: some View {
+
+        ZStack(alignment: .top) {
+
+            Map(position: $cameraPosition) {
+
+                UserAnnotation()
+
+                Marker("UIC Dorms", coordinate: dorms)
+                    .tint(.purple)
+
+                Marker("Student Center East", coordinate: studentCenter)
+
+                Marker("Behavioral Sciences", coordinate: behavioralScience)
+
+                Annotation("Elevator", coordinate: elevator) {
+                    Image(systemName: "arrow.up.arrow.down.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(.blue)
+                }
+
+                Annotation("Ramp", coordinate: ramp) {
+                    Image(systemName: "figure.roll")
+                        .font(.title2)
+                        .foregroundStyle(.green)
+                }
+
+                Annotation("Accessible Entrance", coordinate: entrance) {
+                    Image(systemName: "door.left.hand.open")
+                        .font(.title2)
+                        .foregroundStyle(.orange)
+                }
+
+                if let destination {
+
+                    Marker(
+                        destination .name ?? "Destination",
+                        coordinate: destination .placemark.coordinate
+                    )
+                }
+
+                if let route {
+
+                    MapPolyline(route.polyline)
+                        .stroke(.blue, lineWidth: 7)
+                }
+            }
+            .mapControls {
+                MapCompass()
+                MapScaleView()
+                MapUserLocationButton()
+            }
+
+            // MARK: - Search Bar
+
+            HStack(spacing: 12) {
+
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.gray)
+
+                TextField(
+                    "Search UIC building...",
+                    text: $searchText
+                )
+                .textFieldStyle(.plain)
+                .submitLabel(.search)
+                .onSubmit {
+                    Task {
+                        await searchForLocation()
+                    }
+                }
+
+                Button {
+
+                    Task {
+                        await searchForLocation()
+                    }
+
+                } label: {
+
+                    Text("Go")
+                        .fontWeight(.semibold)
+
+                }
+
+            }
+            .padding()
+            .background(.white)
+            .clipShape(Capsule())
+            .shadow(radius: 5)
+            .padding(.horizontal)
+            .padding(.top, 15)
+
+            // MARK: - Turn-by-Turn Directions Panel
+
+            VStack {
+
+                Spacer()
+
+                if !routeSteps.isEmpty {
+
+                    VStack(alignment: .leading, spacing: 15) {
+
+                        Text("Directions")
+                            .font(.title2)
+                            .bold()
+
+                        ScrollView {
+
+                            LazyVStack(alignment: .leading, spacing: 15) {
+
+                                ForEach(routeSteps.indices, id: \.self) { index in
+
+                                    HStack(alignment: .top, spacing: 12) {
+
+                                        Text("\(index + 1)")
+                                            .font(.headline)
+                                            .foregroundStyle(.white)
+                                            .frame(width: 30, height: 30)
+                                            .background(Color.blue)
+                                            .clipShape(Circle())
+
+                                        VStack(alignment: .leading, spacing: 5) {
+
+                                            Text(routeSteps[index].instructions)
+                                                .font(.headline)
+
+                                            Text("\(Int(routeSteps[index].distance)) meters")
+                                                .font(.caption)
+                                                .foregroundStyle(.gray)
+
+                                        }
+
+                                        Spacer()
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                        .frame(maxHeight: 250)
+
+                    }
+                    .padding()
+                    .background(.regularMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
+                    .padding()
+
+                }
+
+            }
+
+        }
+    }
+
+    // MARK: - Search Function
+    func searchForLocation() async {
+
+        guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchText
+
+        request.region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: 41.8708,
+                longitude: -87.6494
+            ),
+            span: MKCoordinateSpan(
+                latitudeDelta: 0.02,
+                longitudeDelta: 0.02
+            )
+        )
+
+        do {
+
+            let response = try await MKLocalSearch(request: request).start()
+
+            searchResults = response.mapItems
+
+            guard let place = response.mapItems.first else {
+                return
+            }
+
+            destination = place
+
+            await getDirections(to: place)
+
+        } catch {
+
+            print("Search Error: \(error.localizedDescription)")
+
+        }
+
+    }
+
+    // MARK: - Get Directions
+
+    func getDirections(to place: MKMapItem) async {
+
+        let request = MKDirections.Request()
+
+        request.source = MKMapItem.forCurrentLocation()
+        request.destination = place
+        request.transportType = .walking
+
+        do {
+
+            let response = try await MKDirections(request: request).calculate()
+
+            guard let firstRoute = response.routes.first else {
+                return
+            }
+
+            route = firstRoute
+
+            routeSteps = firstRoute.steps.filter {
+                !$0.instructions.isEmpty
+            }
+
+            cameraPosition = .rect(firstRoute.polyline.boundingMapRect)
+
+            print("Distance: \(Int(firstRoute.distance)) meters")
+            print("Travel Time: \(Int(firstRoute.expectedTravelTime / 60)) minutes")
+
+        } catch {
+
+            print("Directions Error: \(error.localizedDescription)")
+
+        }
+
+    }
+}
+
+#Preview {
+    NavigationStack {
+        Uniwaymap2()
+    }
+}
