@@ -1,0 +1,241 @@
+//
+//  UniWayinputschedule.swift
+//  UniWay
+//
+//  Created by NEIU Pathways on 7/21/26.
+//
+
+import SwiftUI
+
+struct UniWayinputschedule: View {
+
+    // Stores the number of classes
+    @State private var mondayClasses = 0
+    @State private var tuesdayClasses = 0
+    @State private var wednesdayClasses = 0
+    @State private var thursdayClasses = 0
+    @State private var fridayClasses = 0
+
+    // Schedule starts selected
+    @State private var selectedButton = 1
+
+    var body: some View {
+
+        // Start of the whole screen
+        VStack(spacing: 0) {
+
+            // Start of the top section
+            HStack {
+
+                // Back button
+                Button {
+                    print("Back button pressed")
+                } label: {
+                    Image(systemName: "arrow.left")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(darkPurple)
+                }
+
+                Spacer()
+
+                // Page title
+                Text("Input Schedule")
+                    .font(.system(size: 27, weight: .bold))
+                    .foregroundStyle(darkText)
+
+                Spacer()
+
+                // Calendar button
+                Button {
+                    print("Calendar button pressed")
+                } label: {
+                    Image(systemName: "calendar")
+                        .font(.system(size: 29))
+                        .foregroundStyle(darkPurple)
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.top, 15)
+            .padding(.bottom, 15)
+            // End of the top section
+
+
+            // Start of the schedule cards
+            ScrollView(showsIndicators: false) {
+
+                VStack(spacing: 16) {
+
+                    // Monday card
+                    dayCard(
+                        day: "Monday",
+                        numberOfClasses: mondayClasses
+                    ) {
+                        mondayClasses += 1
+                    }
+
+                    // Tuesday card
+                    dayCard(
+                        day: "Tuesday",
+                        numberOfClasses: tuesdayClasses
+                    ) {
+                        tuesdayClasses += 1
+                    }
+
+                    // Wednesday card
+                    dayCard(
+                        day: "Wednesday",
+                        numberOfClasses: wednesdayClasses
+                    ) {
+                        wednesdayClasses += 1
+                    }
+
+                    // Thursday card
+                    dayCard(
+                        day: "Thursday",
+                        numberOfClasses: thursdayClasses
+                    ) {
+                        thursdayClasses += 1
+                    }
+
+                    // Friday card
+                    dayCard(
+                        day: "Friday",
+                        numberOfClasses: fridayClasses
+                    ) {
+                        fridayClasses += 1
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 25)
+            }
+            // End of the schedule cards
+
+
+            // Start of the bottom menu
+            HStack {
+                
+                
+            }
+            
+            
+            // End of the bottom menu
+        }
+        .background(Color.white)
+        // End of the whole screen
+    }
+
+
+    // This makes one day card
+    private func dayCard(
+        day: String,
+        numberOfClasses: Int,
+        addClass: @escaping () -> Void
+    ) -> some View {
+
+        HStack(spacing: 15) {
+
+            // Calendar picture
+            Image(systemName: "calendar")
+                .font(.system(size: 29))
+                .foregroundStyle(darkPurple)
+                .frame(width: 42)
+
+            // Day name and class number
+            VStack(alignment: .leading, spacing: 5) {
+
+                Text(day)
+                    .font(.system(size: 21, weight: .bold))
+                    .foregroundStyle(darkText)
+
+                Text(classText(number: numberOfClasses))
+                    .font(.system(size: 17))
+                    .foregroundStyle(secondText)
+            }
+
+            Spacer()
+
+            // Add Class button
+            Button {
+                addClass()
+            } label: {
+                Text("+ Add Class")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 18)
+                    .frame(height: 46)
+                    .background(redButton)
+                    .clipShape(Capsule())
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 18)
+        .frame(maxWidth: .infinity)
+        .frame(height: 125)
+        .background(Color.white)
+        .clipShape(
+            RoundedRectangle(cornerRadius: 28)
+        )
+        .overlay {
+
+            // Border around the card
+            RoundedRectangle(cornerRadius: 28)
+                .stroke(cardBorder, lineWidth: 1.5)
+        }
+    }
+
+
+    // Changes class to classes
+    private func classText(number: Int) -> String {
+
+        if number == 1 {
+            return "1 class added"
+        } else {
+            return "\(number) classes added"
+        }
+    }
+
+
+    
+            
+
+
+    // Start of the colors
+
+    private let darkPurple = Color(
+        red: 0.14,
+        green: 0.08,
+        blue: 0.40
+    )
+
+    private let redButton = Color(
+        red: 0.70,
+        green: 0.03,
+        blue: 0.09
+    )
+
+    private let darkText = Color(
+        red: 0.12,
+        green: 0.08,
+        blue: 0.10
+    )
+
+    private let secondText = Color(
+        red: 0.35,
+        green: 0.30,
+        blue: 0.31
+    )
+
+    private let cardBorder = Color(
+        red: 0.22,
+        green: 0.18,
+        blue: 0.23
+    )
+
+    // End of the colors
+}
+
+
+#Preview {
+    UniWayinputschedule()
+}
+
