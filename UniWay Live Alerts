@@ -1,0 +1,309 @@
+import SwiftUI
+
+struct Live_Alerts: View {
+
+    @State var searchText = ""
+
+    var body: some View {
+       
+        VStack(spacing: 0) {
+
+            VStack(alignment: .leading, spacing: 2) {
+
+                Text("Live Alerts")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundStyle(.black)
+
+                Text("Real-Time updates around campus")
+                    .font(.system(size: 19, weight: .bold))
+                    .foregroundStyle(.black)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 24)
+            .padding(.top, 10)
+
+
+            HStack(spacing: 12) {
+
+                HStack(spacing: 12) {
+
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 21))
+                        .foregroundStyle(darkPurple)
+
+                    TextField(
+                        "Search alerts...",
+                        text: $searchText
+                    )
+                    .font(.system(size: 18))
+                }
+                .padding(.horizontal, 18)
+                .frame(height: 55)
+                .background(lightPurple)
+                .clipShape(Capsule())
+
+                Button {
+                    print("Menu button pressed")
+                } label: {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.system(size: 26, weight: .bold))
+                        .foregroundStyle(darkPurple)
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.top, 18)
+            .padding(.bottom, 12)
+
+
+            ScrollView(showsIndicators: false) {
+
+                VStack(spacing: 14) {
+
+                    alertCard(
+                        title: "Elevator Out Of Service",
+                        location: "Science & Engineering Building",
+                        message: "Elevator B is temporarily out of service",
+                        updateText: "Updated 3 min ago",
+                        buttonText: "View New Route",
+                        mainColor: redColor,
+                        lightColor: lightRed,
+                        icon: Image("elevator-solid-full")
+                    )
+
+                    alertCard(
+                        title: "Blocked Pathway",
+                        location: "East Walkway near UIC Forum",
+                        message: "Accessible ramp is blocked due to construction",
+                        updateText: "Updated 10 min ago",
+                        buttonText: "Alternative Route",
+                        mainColor: orangeColor,
+                        lightColor: lightOrange,
+                        icon: Image("road-circle-xmark-solid")
+                    )
+
+                    alertCard(
+                        title: "Automatic Door Working",
+                        location: "Library Main Entrance",
+                        message: "Automatic doors are working again",
+                        updateText: "Updated 30 min ago",
+                        buttonText: "",
+                        mainColor: greenColor,
+                        lightColor: lightGreen,
+                        icon: Image("circle-check-solid-2")
+                    )
+
+                    alertCard(
+                        title: "Construction Ahead",
+                        location: "Student Center East",
+                        message: "Sidewalk narrowed. Please proceed with caution.",
+                        updateText: "Updated 45 min ago",
+                        buttonText: "Alternative Route",
+                        mainColor: orangeColor,
+                        lightColor: lightOrange,
+                        icon: Image("person-digging-solid-full")
+                    )
+
+                    NavigationLink(destination: report()) {
+
+                        Text("+ Report Issue")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 48)
+                            .background(redButton)
+                            .clipShape(Capsule())
+
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 35)
+                    .padding(.top, 4)
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 25)
+            }
+        }
+        .background(Color.white)
+    }
+
+
+    func alertCard(
+        title: String,
+        location: String,
+        message: String,
+        updateText: String,
+        buttonText: String,
+        mainColor: Color,
+        lightColor: Color,
+        icon: Image
+    ) -> some View {
+
+        HStack(spacing: 12) {
+
+            ZStack {
+
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(mainColor)
+                    .frame(width: 4)
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+
+                HStack(alignment: .top, spacing: 14) {
+
+                    ZStack {
+
+                        Capsule()
+                            .fill(lightColor)
+                            .frame(width: 65, height: 45)
+                            .overlay {
+                                Capsule()
+                                    .stroke(
+                                        Color.black.opacity(0.35),
+                                        lineWidth: 1
+                                    )
+                            }
+                            .shadow(
+                                color: Color.black.opacity(0.18),
+                                radius: 3,
+                                x: 0,
+                                y: 3
+                            )
+
+                        icon
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+
+                        Text(title)
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundStyle(.black)
+
+                        Text(location)
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(.black)
+
+                        Text(message)
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(.black)
+                            .fixedSize(
+                                horizontal: false,
+                                vertical: true
+                            )
+                    }
+
+                    Spacer()
+                }
+
+                HStack {
+
+                    Text(updateText)
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(mainColor)
+
+                    Spacer()
+
+                    if buttonText.isEmpty == false {
+
+                        Button {
+                            print("\(buttonText) pressed")
+                        } label: {
+                            Text(buttonText)
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(mainColor)
+                                .padding(.horizontal, 16)
+                                .frame(height: 28)
+                                .background(Color.white)
+                                .clipShape(Capsule())
+                                .overlay {
+                                    Capsule()
+                                        .stroke(
+                                            mainColor,
+                                            lineWidth: 1
+                                        )
+                                }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            .padding(.vertical, 16)
+            .padding(.trailing, 12)
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color.white)
+        .clipShape(
+            RoundedRectangle(cornerRadius: 25)
+        )
+        .shadow(
+            color: Color.black.opacity(0.08),
+            radius: 8,
+            x: 0,
+            y: 4
+        )
+    }
+
+
+    let darkPurple = Color(
+        red: 0.14,
+        green: 0.08,
+        blue: 0.40
+    )
+
+    let lightPurple = Color(
+        red: 0.91,
+        green: 0.89,
+        blue: 0.92
+    )
+
+    let redButton = Color(
+        red: 0.70,
+        green: 0.03,
+        blue: 0.09
+    )
+
+    let redColor = Color(
+        red: 0.73,
+        green: 0.15,
+        blue: 0.20
+    )
+
+    let lightRed = Color(
+        red: 0.96,
+        green: 0.72,
+        blue: 0.74
+    )
+
+    let orangeColor = Color(
+        red: 0.84,
+        green: 0.55,
+        blue: 0.10
+    )
+
+    let lightOrange = Color(
+        red: 1.00,
+        green: 0.84,
+        blue: 0.56
+    )
+
+    let greenColor = Color(
+        red: 0.16,
+        green: 0.55,
+        blue: 0.15
+    )
+
+    let lightGreen = Color(
+        red: 0.75,
+        green: 0.94,
+        blue: 0.69
+    )
+}
+
+
+    #Preview {
+        NavigationStack {
+            Live_Alerts()
+        }
+    }
