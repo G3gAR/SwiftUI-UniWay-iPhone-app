@@ -1,0 +1,157 @@
+//part 3
+//  UniWayhelpsyou.swift
+//  UniWay
+//
+
+import SwiftUI
+
+struct UniWayhelpsyou: View {
+    // Stores the selected accessibility options
+    @State private var selectedOptions: Set<String> = []
+    @Binding var login: Bool
+    // List of accessibility options
+    let options = [
+        ("Ramps", "figure.roll"),
+        ("Elevators", "arrow.up.arrow.down.square.fill"),
+        ("Automatic Doors", "door.left.hand.open"),
+        ("Escalators", "figure.stairs"),
+        ("Voice Over Directions", "speaker.wave.2.fill")
+    ]
+
+    // Controls navigation to the map
+    @State private var goToMap = false
+
+    var body: some View {
+
+        ZStack {
+
+            // Background Color
+            Color(red: 0.99, green: 0.97, blue: 0.97)
+                .ignoresSafeArea()
+
+            VStack(spacing: 24) {
+
+                // Header
+                HStack {
+
+                    Image(systemName: "arrow.left")
+                        .font(.title2)
+                        .foregroundColor(Color(red: 0.21, green: 0.09, blue: 0.59))
+
+                    Spacer()
+                }
+
+                VStack(spacing: 4) {
+
+                    Text("How can UniWay Help?")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(red: 0.21, green: 0.09, blue: 0.59))
+
+                    Text("Select all that apply")
+                        .foregroundColor(.gray)
+                }
+
+                // Accessibility Options
+                ForEach(options, id: \.0) { option in
+
+                    Button {
+
+                        if selectedOptions.contains(option.0) {
+                            selectedOptions.remove(option.0)
+                        } else {
+                            selectedOptions.insert(option.0)
+                        }
+
+                    } label: {
+
+                        HStack {
+
+                            Image(systemName: option.1)
+                                .font(.title2)
+                                .frame(width: 35)
+
+                            Text(option.0)
+                                .font(.headline)
+
+                            Spacer()
+
+                            if selectedOptions.contains(option.0) {
+
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(Color(red: 0.21, green: 0.09, blue: 0.59))
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(Color(red: 0.21, green: 0.09, blue: 0.59))
+                        .background(Color.white)
+                        .cornerRadius(30)
+                        .shadow(
+                            color: .black.opacity(0.18),
+                            radius: 6,
+                            x: 0,
+                            y: 4
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 30)
+                                .stroke(
+                                    selectedOptions.contains(option.0)
+                                    ? Color(red: 0.21, green: 0.09, blue: 0.59)
+                                    : Color.gray.opacity(0.3),
+                                    lineWidth: 2
+                                )
+                        )
+                    }
+                    .padding(.vertical, 6)
+                }
+
+                Spacer()
+
+                // Continue Button
+                Button {
+
+                    print(selectedOptions)
+
+                    // Navigate to the map
+                    goToMap = true
+                    login = true
+
+                } label: {
+
+                    Text("Continue")
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(red: 0.74, green: 0.15, blue: 0.20))
+                        .cornerRadius(20)
+                        .shadow(
+                            color: .black.opacity(0.25),
+                            radius: 5,
+                            x: 0,
+                            y: 4
+                        )
+                }
+
+                // Hidden NavigationLink
+                NavigationLink(
+                    destination: MainTabView(),
+                    isActive: $goToMap
+                ) {
+                    EmptyView()
+                }
+
+            }
+            .padding()
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+}
+
+#Preview {
+
+    UniWayhelpsyou(login: Binding<Bool>(get: { false }, set: { _ in }))
+}
